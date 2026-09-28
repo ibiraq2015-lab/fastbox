@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>عالم الكتب | World Books</title>
+<style>
+:root{--bg:#080c16;--card:#111827;--card2:#172033;--text:#f7f8fb;--muted:#9aa6ba;--accent:#7c5cff;--accent2:#19c7a5;--line:#263149}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#070b14,#0d1322 45%,#080c16);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;background:rgba(8,12,22,.88);backdrop-filter:blur(18px);border-bottom:1px solid #182238;padding:14px 16px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1100px;margin:auto}.brand{font-size:22px;font-weight:900}.brand span{color:var(--accent)}
+.icon{border:0;background:#151d30;color:white;border-radius:13px;padding:10px 12px;font-size:18px}
+.hero{max-width:1100px;margin:0 auto;padding:38px 16px 20px}.hero h1{font-size:34px;margin:0 0 10px}.hero p{color:var(--muted);margin:0 0 22px;line-height:1.7}
+.search{display:flex;gap:8px;background:#111827;border:1px solid var(--line);padding:7px;border-radius:18px}.search input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:white;padding:11px;font-size:16px}.search button{border:0;background:var(--accent);color:white;border-radius:13px;padding:0 18px;font-weight:800}
+.chips{display:flex;gap:8px;overflow:auto;padding:14px 0 4px}.chip{white-space:nowrap;background:#121a2b;border:1px solid var(--line);color:#dbe2ef;padding:9px 13px;border-radius:999px}.chip.active{background:#2a2159;border-color:#6953db}
+main{max-width:1100px;margin:auto;padding:0 16px 50px}.bar{display:flex;justify-content:space-between;align-items:center;margin:22px 0 14px}.bar h2{font-size:20px;margin:0}.status{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.book{background:linear-gradient(145deg,#111827,#0f1727);border:1px solid var(--line);border-radius:17px;overflow:hidden;min-width:0;cursor:pointer;transition:.2s}.book:active{transform:scale(.98)}.cover{width:100%;aspect-ratio:2/3;object-fit:cover;background:#202a3c}.info{padding:11px}.title{font-weight:800;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.author{color:var(--muted);font-size:13px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{display:flex;justify-content:space-between;margin-top:9px;color:#c8d1e0;font-size:12px}
+.empty{text-align:center;color:var(--muted);padding:45px 10px}.spinner{padding:35px;text-align:center;color:var(--muted)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);z-index:30;display:none;align-items:flex-end}.modal{background:#0d1423;border:1px solid var(--line);border-radius:24px 24px 0 0;width:100%;max-height:88vh;overflow:auto;padding:18px}.close{float:left;border:0;background:#1b2538;color:white;border-radius:12px;padding:9px 12px}.detail{display:grid;grid-template-columns:120px 1fr;gap:18px;padding-top:15px}.detail img{width:120px;border-radius:13px}.detail h2{margin:0 0 7px}.muted{color:var(--muted);line-height:1.7}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.actions button,.link{border:0;border-radius:12px;padding:10px 13px;text-decoration:none;color:white;background:#1a2438}.actions .primary{background:var(--accent)}.footer{text-align:center;color:#69758b;font-size:12px;padding:20px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(5,1fr)}.hero h1{font-size:46px}.overlay{align-items:center}.modal{max-width:760px;border-radius:24px}}
+</style>
+</head>
+<body>
+<header><div class="top"><div class="brand">📚 عالم<span>الكتب</span></div><button class="icon" onclick="showFav()">♡</button></div></header>
+
+<section class="hero">
+<h1>مكتبة العالم في مكان واحد</h1>
+<p>ابحث عن ملايين الكتب والعناوين والمؤلفين عبر مصادر الكتب المفتوحة، بالعربية والإنجليزية ولغات أخرى.</p>
+<div class="search"><input id="q" placeholder="ابحث باسم الكتاب أو المؤلف..." onkeydown="if(event.key==='Enter')search()"><button onclick="search()">بحث</button></div>
+<div class="chips" id="chips">
+<button class="chip active" onclick="quick('أشهر الكتب',this)">الأشهر</button>
+<button class="chip" onclick="quick('Arabic books',this)">العربية</button>
+<button class="chip" onclick="quick('science fiction',this)">خيال علمي</button>
+<button class="chip" onclick="quick('history',this)">تاريخ</button>
+<button class="chip" onclick="quick('novel',this)">روايات</button>
+<button class="chip" onclick="quick('philosophy',this)">فلسفة</button>
+<button class="chip" onclick="quick('computer science',this)">تقنية</button>
+<button class="chip" onclick="quick('children books',this)">أطفال</button>
+<button class="chip" onclick="quick('business',this)">أعمال</button>
+</div>
+</section>
+
+<main>
+<div class="bar"><h2 id="heading">كتب مقترحة</h2><span class="status" id="status"></span></div>
+<div id="stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px">
+<div style="background:#111827;border:1px solid #263149;border-radius:15px;padding:13px;text-align:center"><b style="font-size:20px">🌍</b><div style="font-size:12px;color:#9aa6ba;margin-top:5px">فهرس عالمي</div></div>
+<div style="background:#111827;border:1px solid #263149;border-radius:15px;padding:13px;text-align:center"><b style="font-size:20px">📱</b><div style="font-size:12px;color:#9aa6ba;margin-top:5px">متوافق مع الآيفون</div></div>
+<div style="background:#111827;border:1px solid #263149;border-radius:15px;padding:13px;text-align:center"><b style="font-size:20px">⚖️</b><div style="font-size:12px;color:#9aa6ba;margin-top:5px">مصادر قانونية</div></div>
+</div>
+<div id="grid" class="grid"></div>
+<div id="more" style="text-align:center;margin-top:20px"></div>
+<div class="footer">World Books • فهرس عالمي يعتمد على مصادر عامة مفتوحة • لا يتم استضافة الكتب المحمية بحقوق النشر داخل الموقع</div>
+</main>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+<div class="modal"><button class="close" onclick="closeModal()">✕</button><div id="detail"></div></div>
+</div>
+
+<script>
+const API='https://openlibrary.org/search.json';
+const COVER='https://covers.openlibrary.org/b/id/';
+let page=1,current='',mode='search',favorites=JSON.parse(localStorage.getItem('worldBooksFav')||'{}');
+const grid=document.getElementById('grid'),status=document.getElementById('status'),heading=document.getElementById('heading');
+
+function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function cover(id){return id?COVER+id+'-M.jpg':'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600"><rect width="100%" height="100%" fill="#202a3c"/><text x="50%" y="50%" fill="#9aa6ba" text-anchor="middle" font-size="24">NO COVER</text></svg>')}
+function render(docs,append=false){
+ if(!append)grid.innerHTML='';
+ if(!docs.length&&!append){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لم نجد نتائج. جرّب اسمًا أو مؤلفًا آخر.</div>';return}
+ docs.forEach((b,i)=>{
+   const id=b.key||('book'+i), fav=!!favorites[id];
+   const el=document.createElement('article');el.className='book';
+   el.innerHTML=`<img class="cover" src="${cover(b.cover_i)}" loading="lazy" onerror="this.src='${cover(0)}'"><div class="info"><div class="title">${esc(b.title||'بدون عنوان')}</div><div class="author">${esc((b.author_name||['مؤلف غير معروف']).slice(0,2).join('، '))}</div><div class="meta"><span>${b.first_publish_year||'—'}</span><span>${fav?'♥':'♡'}</span></div></div>`;
+   el.onclick=()=>details(b);
+   grid.appendChild(el);
+ });
+}
+async function search(reset=true){
+ const q=document.getElementById('q').value.trim()||'popular books';
+ if(reset)page=1; current=q; mode='search';heading.textContent=q==='popular books'?'كتب مقترحة':`نتائج: ${q}`;status.textContent='جاري البحث...';
+ try{
+  const r=await fetch(`${API}?q=${encodeURIComponent(q)}&page=${page}&limit=20&fields=key,title,author_name,cover_i,first_publish_year,subject,language,isbn,publisher,edition_key`);
+  const d=await r.json();render(d.docs,page>1);status.textContent=`${d.numFound?.toLocaleString()||0} نتيجة مفهرسة`;
+  document.getElementById('more').innerHTML=d.docs.length?`<button class="chip" onclick="page++;search(false)">تحميل المزيد</button>`:'';
+ }catch(e){status.textContent='تعذر الاتصال بالمصدر';grid.innerHTML='<div class="empty" style="grid-column:1/-1">تحقق من اتصال الإنترنت ثم حاول مرة أخرى.</div>'}
+}
+function quick(q,btn){document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById('q').value=q;search(true)}
+function details(b){
+ const id=b.key, saved=!!favorites[id], desc=Array.isArray(b.subject)?b.subject.slice(0,8).join('، '):'';
+ document.getElementById('detail').innerHTML=`<div class="detail"><img src="${cover(b.cover_i)}"><div><h2>${esc(b.title||'بدون عنوان')}</h2><div class="muted">${esc((b.author_name||['مؤلف غير معروف']).join('، '))}</div><div class="muted">سنة النشر: ${b.first_publish_year||'غير معروفة'}</div><div class="muted">اللغات: ${esc((b.language||[]).slice(0,6).join('، ')||'غير متوفر')}</div></div></div>
+ <div class="actions">
+<button class="primary" onclick="openSource('${encodeURIComponent(id)}')">فتح صفحة الكتاب</button>
+<button onclick="window.open('https://www.google.com/search?tbm=bks&q='+encodeURIComponent('${esc(b.title||'')}'),'_blank')">🔎 بحث إضافي</button>
+<button onclick="toggleFav('${esc(id)}')">${saved?'♥ إزالة من المفضلة':'♡ إضافة للمفضلة'}</button>
+</div>
+ <p class="muted"><b>التصنيفات:</b> ${esc(desc||'لا توجد تصنيفات متاحة')}</p>
+ <p class="muted">هذا الموقع يعمل كفهرس للكتب. توفر القراءة أو التنزيل يعتمد على حالة حقوق النشر والمصدر.</p>`;
+ document.getElementById('overlay').style.display='flex';
+}
+function closeModal(){document.getElementById('overlay').style.display='none'}
+function openSource(id){
+ const key=decodeURIComponent(id);
+ window.open('https://openlibrary.org'+key,'_blank');
+}
+function toggleFav(id){if(favorites[id])delete favorites[id];else favorites[id]={savedAt:Date.now()};localStorage.setItem('worldBooksFav',JSON.stringify(favorites));closeModal();if(current)search()}
+function showFav(){
+ const keys=Object.keys(favorites);heading.textContent='المفضلة';status.textContent=`${keys.length} كتاب`;
+ if(!keys.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد كتب محفوظة بعد.</div>';return}
+ // Favorites store IDs only; fetch their records
+ Promise.all(keys.slice(0,40).map(k=>fetch('https://openlibrary.org'+k+'.json').then(r=>r.json()).catch(()=>null))).then(items=>{
+   render(items.filter(Boolean).map(x=>({key:x.key,title:x.title,author_name:(x.authors||[]).map(a=>a.author?.key).filter(Boolean).length?['مؤلف']:['مؤلف'],cover_i:x.covers?.[0],first_publish_year:x.first_publish_date?.slice(0,4)})))
+ })
+}
+search();
+document.addEventListener('keydown',e=>{
+ if(e.key==='/' && document.activeElement.tagName!=='INPUT'){e.preventDefault();document.getElementById('q').focus()}
+ if(e.key==='Escape')closeModal();
+});
+</script>
+</body>
+</html>
